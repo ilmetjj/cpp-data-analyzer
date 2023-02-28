@@ -49,6 +49,29 @@ vector<double[2]> convert(vector<vector<double>> v){
 	return w;
 }
 */
+
+vector<vector<double>> normalized(vector<vector<double>> raw){
+	vector<double> max, min;
+	max.resize(raw[0].size(), 0);
+	min.resize(raw[0].size(), 0);
+	for(int i=0; i<raw[0].size(); i++){
+		for(int j=0; j<raw.size(); j++){
+			if(raw[j][i]<min[i]){
+				min[i]=raw[j][i];
+			}
+			if(raw[j][i]>max[i]){
+				max[i]=raw[j][i];
+			}
+		}
+	}
+	for(int i=0; i<raw[0].size(); i++){
+		for(int j=0; j<raw.size(); j++){
+			raw[j][i]=(raw[j][i]-min[i])/(max[i]-min[i]);
+		}
+	}
+	return raw;
+}
+
 double Loss(double m, double q, vector<vector<double>> v, int cx, int cy)
 {
 	double s=0;

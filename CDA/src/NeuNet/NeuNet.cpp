@@ -348,7 +348,7 @@ void net::appl_gr()
 }
 double net::train(vector<vector<double>> _in, vector<vector<double>> exp_y)
 {
-	double avg;
+	double avg=0;
 	for (int i = 0; i < _in.size(); i++)
 	{
 		vector<double> temp = calc(_in[i]);
@@ -365,7 +365,7 @@ double net::train(vector<vector<double>> _in, vector<vector<double>> exp_y)
 }
 double net::test(vector<vector<double>> _in, vector<vector<double>> exp_y)
 {
-	double avg;
+	double avg=0;
 	for (int i = 0; i < _in.size(); i++)
 	{
 		vector<double> temp=calc(_in[i]);

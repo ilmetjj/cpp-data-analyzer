@@ -1,0 +1,2 @@
+r(x)=x*0.0200224+0.0311718
+plot '../data/test.csv' u 1:2 w p, r(x)

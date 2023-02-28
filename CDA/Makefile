@@ -1,4 +1,4 @@
-TARGET_EXEC := ertr
+TARGET_EXEC := cda
 
 BUILD_DIR := ./build
 SRC_DIRS := ./src
@@ -40,7 +40,7 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 .PHONY: clean
 clean:
 	rm -r $(BUILD_DIR)
-	rm -r rendering*/
+#	rm -r rendering*/
 
 # Include the .d makefiles. The - at the front suppresses the errors of missing
 # Makefiles. Initially, all the .d files will be missing, and we don't want those

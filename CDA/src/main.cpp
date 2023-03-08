@@ -13,14 +13,14 @@ int main(int argc, char** argv){
 	string file_name;
 	char sep;
 	bool skip;
-	int n_col=2, x_col=0;
+	int n_col=2, col_y=1;
 
 	file_name=argv[1];
 	sep=argv[2][0];
 	skip=stoi(argv[3]);
 	if(argc>=5){
 	n_col=stoi(argv[4]);
-	x_col=stoi(argv[5]);
+	col_y=stoi(argv[5]);
 	}
 
 /*	
@@ -48,6 +48,10 @@ int main(int argc, char** argv){
 	cout<<"mgs="<<mgs<<endl;
 	cout<<"lim="<<lim<<endl;
 
+	vector<double> p;
+	p.push_back(0);
+	p.push_back(0);
+	linreg(p, raw_data, lr, n, lim, mgs, n_col, col_y);
 
 /*
 	double m=0;

@@ -130,3 +130,136 @@ void plot(string file_name, double m, double q){
 	fout.close();
 	system("gnuplot plt -p");
 }
+
+double Loss(vector<double> p, vector<vector<double>> v, int n_col, int col_y) {
+	double s = 0;
+	for (int i = 0; i < v.size(); i++)
+	{
+		double temp = v[i][col_y];
+		for (int j = 0; j < n_col; j++) {
+			if (j != col_y) {
+				temp -= p[j] * v[i][j];
+			}
+			temp -= p[col_y];
+			s+=pow(temp,2);
+		}
+	}
+	return s / v.size();
+}
+double ddmLoss(vector<double> p, double col_x, vector<vector<double>> v, int mgs, int n_col, int col_y) {
+	double s = 0;
+	if (mgs == 0) {
+		for (int i = 0; i < v.size(); i++)
+		{
+			double temp=v[i][col_y];
+			for (int j = 0; j < n_col ; j++)
+			{
+				if(j!=col_y){
+					temp-=p[j]*v[i][j];
+				}
+			}
+			temp-=p[col_y];
+			s -= 2 * v[i][col_x] * temp;
+		}
+		return s / v.size();
+	}
+	else {
+		for (int i = 0; i < mgs; i++)
+		{
+			int h = int(double(double(rand()) / double(RAND_MAX)) * double(v.size()));
+			double temp = v[h][col_y];
+			for (int j = 0; j < n_col; j++)
+			{
+				if (j != col_y) {
+					temp -= p[j] * v[h][j];
+				}
+			}
+			temp -= p[col_y];
+			s -= 2 * v[h][col_x] * temp;
+		}
+		return s / mgs;
+	}
+	return s;
+}
+double ddqLoss(vector<double> p, vector<vector<double>> v, int mgs, int n_col, int col_y){
+	double s = 0;
+	if (mgs == 0) {
+		for (int i = 0; i < v.size(); i++)
+		{
+			double temp = v[i][col_y];
+			for (int j = 0; j < n_col; j++)
+			{
+				if (j != col_y) {
+					temp -= p[j] * v[i][j];
+				}
+			}
+			temp -= p[col_y];
+			s -= 2 * temp;
+		}
+		return s / v.size();
+	}
+	else {
+		for (int i = 0; i < mgs; i++)
+		{
+			int h = int(double(double(rand()) / double(RAND_MAX)) * double(v.size()));
+			double temp = v[h][col_y];
+			for (int j = 0; j < n_col; j++)
+			{
+				if (j != col_y) {
+					temp -= p[j] * v[h][j];
+				}
+			}
+			temp -= p[col_y];
+			s -= 2 * temp;
+		}
+		return s / mgs;
+	}
+	return s;
+}
+
+void linreg(vector<double>& p, vector<vector<double>> &data, double lr, int n, double lim, int mgs, int n_col, int col_y){
+	double l = Loss(p, data, n_col, col_y);
+	cout.precision(10);
+	for (int i = 0; i < n; i++) {
+		cout<<i<<endl;
+		double l0 = l;
+		vector<double> p0=p;
+		vector<double> ddp;
+		ddp.resize(n_col);
+		for(int j=0; j<n_col; j++){
+			if(j!=col_y){
+				ddp[j]=ddmLoss(p,j,data,mgs,n_col,col_y);
+			}
+		}
+		ddp[col_y]=ddqLoss(p,data,mgs,n_col,col_y);
+		double lrn = lr; // (log10(double(i+1))+1);
+		vector<double> stepp;
+		stepp.resize(n_col);
+		for (int j = 0; j < n_col; j++) {
+			stepp[j]=lrn*ddp[j];
+			p[j] = p0[j] - stepp[j];
+		}
+		l = Loss(p, data, n_col, col_y);
+		double dl = l - l0;
+		for(int j=0; j<n_col; j++){
+			cout<<"dd"<<j<<"= "<<ddp[j]<<" "<<flush;
+		}
+		cout<<endl;
+		for (int j = 0; j < n_col; j++) {
+			cout << "step" << j << "= " << stepp[j] << " " << flush;
+		}
+		cout << endl;
+		for (int j = 0; j < n_col; j++) {
+			cout << "p" << j << "= " << p[j] << " " << flush;
+		}
+		cout << endl;
+		cout << "loss= " << l << "		Dloss=" << dl << endl;
+		bool min=true;
+		for (int j = 0; j < n_col; j++) {
+			if(abs(ddp[j])>lim)
+				min=false;
+		}
+		if(min)
+			break;
+	}
+}

@@ -263,3 +263,59 @@ void linreg(vector<double>& p, vector<vector<double>> &data, double lr, int n, d
 			break;
 	}
 }
+
+void plot(string file_name, vector<double>& p, int n_col, int col_y){
+	ofstream fout("plt");
+
+	fout << "set terminal png medium size 640,480" << endl;
+
+	for (size_t i = 0; i < n_col; i++)
+	{
+		if(i!=col_y)
+			fout << "r"<<i<<"p(x)=x*" << p[i] << "+" << p[col_y] << endl;
+	}
+	
+	for (size_t i = 0; i < n_col; i++)
+	{
+		
+		if (i != col_y){
+			fout << "set output 'graph" << i << ".png'" << endl;
+			fout << "plot '" << file_name << "' u "<<i+1<<":"<<col_y+1<<" w p, r"<<i<<"p(x)" << endl;
+		}
+	}
+	fout.close();
+	system("gnuplot plt -p");
+}
+
+void plot(vector<vector<double>>& data, vector<double>& p, int n_col, int col_y, string file_name) {
+	ofstream fout(file_name);
+
+	for(size_t i=0; i<data.size(); i++){
+		for (size_t j = 0; j < data[i].size(); j++)
+		{
+			fout<<data[i][j]<<", "<<flush;
+		}
+		fout<<endl;
+	}
+
+	fout.close();
+	fout.open("plt");
+	fout << "set terminal png medium size 640,480" << endl;
+
+	for (size_t i = 0; i < n_col; i++)
+	{
+		if (i != col_y)
+			fout << "r" << i << "p(x)=x*" << p[i] << "+" << p[col_y] << endl;
+	}
+
+	for (size_t i = 0; i < n_col; i++)
+	{
+
+		if (i != col_y) {
+			fout << "set output 'graph" << i << ".png'" << endl;
+			fout << "plot '" << file_name << "' u " << i + 1 << ":" << col_y + 1 << " w p, r" << i << "p(x)" << endl;
+		}
+	}
+	fout.close();
+	system("gnuplot plt -p");
+}

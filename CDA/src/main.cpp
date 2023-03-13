@@ -51,7 +51,8 @@ int main(int argc, char** argv){
 	vector<double> p;
 	p.push_back(0);
 	p.push_back(0);
-	linreg(p, raw_data, lr, n, lim, mgs, n_col, col_y);
+	linreg(p, norm_data, lr, n, lim, mgs, n_col, col_y);
+	plot(norm_data,p,n_col,col_y);
 
 /*
 	double m=0;

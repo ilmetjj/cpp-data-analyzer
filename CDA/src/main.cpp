@@ -49,8 +49,7 @@ int main(int argc, char** argv){
 	cout<<"lim="<<lim<<endl;
 
 	vector<double> p;
-	p.push_back(0);
-	p.push_back(0);
+	p.resize(n_col,0);
 	linreg(p, norm_data, lr, n, lim, mgs, n_col, col_y);
 	plot(norm_data,p,n_col,col_y);
 

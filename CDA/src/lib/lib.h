@@ -26,6 +26,6 @@ double ddqLoss(vector<double> p, vector<vector<double>> data, int mgs = 0, int n
 
 void linreg(vector<double>& p, vector<vector<double>> &data, double lr, int n, double lim, int mgs=0, int n_col=2, int col_y=1);
 void plot(string file_name, vector<double>& p, int n_col, int col_y);
-void plot(vector<vector<double>>& data, vector<double>& p, int n_col, int col_y, string file="dat");
+void plot(vector<vector<double>> data, vector<double> p, int n_col, int col_y, string file="dat");
 
 #endif

@@ -287,7 +287,7 @@ void plot(string file_name, vector<double>& p, int n_col, int col_y){
 	system("gnuplot plt -p");
 }
 
-void plot(vector<vector<double>>& data, vector<double>& p, int n_col, int col_y, string file_name) {
+void plot(vector<vector<double>>data, vector<double>p, int n_col, int col_y, string file_name) {
 	ofstream fout(file_name);
 
 	for(size_t i=0; i<data.size(); i++){

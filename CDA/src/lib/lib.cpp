@@ -218,50 +218,69 @@ double ddqLoss(vector<double> p, vector<vector<double>> v, int mgs, int n_col, i
 }
 
 void linreg(vector<double>& p, vector<vector<double>> &data, double lr, int n, double lim, int mgs, int n_col, int col_y){
+	ofstream fout("loss.csv");
 	double l = Loss(p, data, n_col, col_y);
 	cout.precision(10);
 	for (int i = 0; i < n; i++) {
-		cout<<i<<endl;
+		
 		double l0 = l;
-		vector<double> p0=p;
+		vector<double> p0 = p;
 		vector<double> ddp;
 		ddp.resize(n_col);
-		for(int j=0; j<n_col; j++){
-			if(j!=col_y){
-				ddp[j]=ddmLoss(p,j,data,mgs,n_col,col_y);
+		for (int j = 0; j < n_col; j++) {
+			if (j != col_y) {
+				ddp[j] = ddmLoss(p, j, data, mgs, n_col, col_y);
 			}
 		}
-		ddp[col_y]=ddqLoss(p,data,mgs,n_col,col_y);
+		ddp[col_y] = ddqLoss(p, data, mgs, n_col, col_y);
 		double lrn = lr; // (log10(double(i+1))+1);
 		vector<double> stepp;
 		stepp.resize(n_col);
 		for (int j = 0; j < n_col; j++) {
-			stepp[j]=lrn*ddp[j];
+			stepp[j] = lrn * ddp[j];
 			p[j] = p0[j] - stepp[j];
 		}
 		l = Loss(p, data, n_col, col_y);
 		double dl = l - l0;
-		for(int j=0; j<n_col; j++){
-			cout<<"dd"<<j<<"= "<<ddp[j]<<" "<<flush;
+		if(i%100==0)
+		{
+			cout << i << endl;
+			for (int j = 0; j < n_col; j++) {
+				cout << "dd" << j << "= " << ddp[j] << " " << flush;
+			}
+			cout << endl;
+			for (int j = 0; j < n_col; j++) {
+				cout << "step" << j << "= " << stepp[j] << " " << flush;
+			}
+			cout << endl;
+			for (int j = 0; j < n_col; j++) {
+				cout << "p" << j << "= " << p[j] << " " << flush;
+			}
+			cout << endl;
+			cout << "loss= " << l << "		Dloss=" << dl << endl;
+			fout << i << ",	" << l << ",	" << dl << ", " << flush;
+			for (int j = 0; j < n_col; j++) {
+				fout << ddp[j] << ", " << flush;
+			}
+			fout << endl;
 		}
-		cout<<endl;
+		bool min = true;
 		for (int j = 0; j < n_col; j++) {
-			cout << "step" << j << "= " << stepp[j] << " " << flush;
+			if (abs(ddp[j]) > lim)
+				min = false;
 		}
-		cout << endl;
-		for (int j = 0; j < n_col; j++) {
-			cout << "p" << j << "= " << p[j] << " " << flush;
-		}
-		cout << endl;
-		cout << "loss= " << l << "		Dloss=" << dl << endl;
-		bool min=true;
-		for (int j = 0; j < n_col; j++) {
-			if(abs(ddp[j])>lim)
-				min=false;
-		}
-		if(min)
+		if (min)
+			break;
+		if (abs(dl) < lim)
 			break;
 	}
+	fout.close();
+	fout.open("ploss");
+	fout << "set terminal png medium size 640,480" << endl;
+	fout << "set output 'loss.png'" << endl;
+	fout << "plot 'loss.csv' u 1:2 w l" << endl;
+	fout.close();
+	system("gnuplot ploss -p");
 }
 
 void plot(string file_name, vector<double>& p, int n_col, int col_y){

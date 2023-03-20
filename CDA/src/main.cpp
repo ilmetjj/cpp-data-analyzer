@@ -52,6 +52,10 @@ int main(int argc, char** argv){
 	p.resize(n_col,0);
 	linreg(p, norm_data, lr, n, lim, mgs, n_col, col_y);
 	plot(norm_data,p,n_col,col_y);
+//	plot(norm_data,p,n_col,col_y);
+
+	vector<int> midlay;
+//	net A(n_col-1,1,midlay,0,0,Soft)
 
 /*
 	double m=0;

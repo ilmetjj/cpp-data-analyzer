@@ -1,10 +1,3 @@
 set terminal png medium size 640,480
-r0p(x)=x*0.692931+0.260697
-r1p(x)=x*-0.0254738+0.260697
-r2p(x)=x*0.0668145+0.260697
-set output 'graph0.png'
-plot 'dat' u 1:4 w p, r0p(x)
-set output 'graph1.png'
-plot 'dat' u 2:4 w p, r1p(x)
-set output 'graph2.png'
-plot 'dat' u 3:4 w p, r2p(x)
+set output 'loss.png'
+plot 'cost.dat' u 1:2 w l

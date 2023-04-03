@@ -1,3 +1,7 @@
 set terminal png medium size 640,480
 set output 'pred.png'
-plot 'pred.dat' u 4:1 w p, 'pred.dat' u 5:1 w p
+plot 'pred.dat' u 1:4 w p, 'pred.dat' u 1:5 w p
+set output 'difq.png'
+plot 'pred.dat' u 1:6 w p
+set output 'dep.png'
+plot 'pred.dat' u 4:5 w p

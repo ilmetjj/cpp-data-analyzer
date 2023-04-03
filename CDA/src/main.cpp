@@ -36,19 +36,20 @@ int main(int argc, char** argv) {
 
 	double lr, n, mgs, lim;
 	cout << "learning rate (es.:0.01):	"; cin >> lr;
+	cout << "lr=" << lr << endl;
 	cout << "number of iteration (es.:10e4):	"; cin >> n;
+	cout << "n=" << n << endl;
 //	cout << "dd limit (es.:1e-10) "; cin >> lim;
 	cout << "minigroup size (es.:0/15):	"; cin >> mgs;
-	cout << "lr=" << lr << endl;
-	cout << "n=" << n << endl;
 	cout << "mgs=" << mgs << endl;
 //	cout << "lim=" << lim << endl;
 //
+	
 	vector<int> midlay;
 	midlay.push_back(2);
 	net A(n_col-1, 1, midlay, 0, 0, Sigmoid, dSigmoid, lr, true);	
 
-	vector<vector<double>> data=raw_data;
+	vector<vector<double>> data=norm_data;
 
 	vector<vector<double>> in, out;
 	for(size_t i=0; i<data.size(); i++){
@@ -56,9 +57,9 @@ int main(int argc, char** argv) {
 		for (size_t j = 0; j < n_col; j++) {
 			
 			if(j==col_y)
-				t_i.push_back(data[i][j]);
-			else
 				t_o.push_back(data[i][j]);
+			else
+				t_i.push_back(data[i][j]);
 		}
 		in.push_back(t_i);
 		out.push_back(t_o);
@@ -66,6 +67,8 @@ int main(int argc, char** argv) {
 
 	print_vvd(in);
 	print_vvd(out);
+	
+	
 
 	ofstream fout("cost.dat");
 	for(int i=0; i<n; i++){
@@ -77,7 +80,8 @@ int main(int argc, char** argv) {
 			temp_out.push_back(out[t]);
 		}
 		fout << i << ",	" << A.train(temp_in, temp_out) << endl;
-		cout << i << ",	" << A.train(temp_in, temp_out) << endl;
+		if(i%100==0)
+			cout << i << ",	" << A.train(temp_in, temp_out) << endl;
 	}
 
 	fout.close();
@@ -94,13 +98,17 @@ int main(int argc, char** argv) {
 	fout.open("pred.dat");
 	for (size_t i = 0; i < data.size(); i++) {
 		vector<double> net_o=A.calc(in[i]);
-		fout << i << ",	" << in[i][0] << ",	" << in[i][1] << ",	" << out[i][0] << ",	" << net_o[0] << endl;
-	}	
+		fout << i << ",	" << in[i][0] << ",	" << in[i][1] << ",	" << out[i][0] << ",	" << net_o[0] << ",	" << pow(out[i][0] - net_o[0],2) << endl;
+	}
 	fout.close();
 	fout.open("plt2");
 	fout << "set terminal png medium size 640,480" << endl;
 	fout << "set output 'pred.png'" << endl;
-	fout << "plot 'pred.dat' u 4:1 w p, 'pred.dat' u 5:1 w p" << endl;
+	fout << "plot 'pred.dat' u 1:4 w p, 'pred.dat' u 1:5 w p" << endl;
+	fout << "set output 'difq.png'" << endl;
+	fout << "plot 'pred.dat' u 1:6 w p" << endl;
+	fout << "set output 'dep.png'" << endl;
+	fout << "plot 'pred.dat' u 4:5 w p" << endl;
 	fout.close();
 	system("gnuplot plt2 -p");
 

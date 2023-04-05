@@ -33,11 +33,17 @@ int main(int argc, char** argv) {
 	cout << "normalized" << endl;
 	print_vvd(norm_data);
 
-
 	double lr, n, mgs, lim;
 	cout << "learning rate (es.:0.01):	"; cin >> lr;
 	cout << "lr=" << lr << endl;
-	cout << "number of iteration (es.:10e4):	"; cin >> n;
+
+	vector<int> midlay;
+	midlay.push_back(2);
+	midlay.push_back(2);
+	net A(n_col-1, 1, midlay, 0, 0, Sigmoid, dSigmoid, lr, false);	
+
+	
+	cout << "\nnumber of iteration (es.:10e4):	"; cin >> n;
 	cout << "n=" << n << endl;
 //	cout << "dd limit (es.:1e-10) "; cin >> lim;
 	cout << "minigroup size (es.:0/15):	"; cin >> mgs;
@@ -45,9 +51,7 @@ int main(int argc, char** argv) {
 //	cout << "lim=" << lim << endl;
 //
 	
-	vector<int> midlay;
-	midlay.push_back(2);
-	net A(n_col-1, 1, midlay, 0, 0, Sigmoid, dSigmoid, lr, true);	
+	
 
 	vector<vector<double>> data=norm_data;
 
@@ -71,7 +75,7 @@ int main(int argc, char** argv) {
 	
 
 	ofstream fout("cost.dat");
-	for(int i=0; i<n; i++){
+	for(long int i=0; i<n; i++){
 		vector<vector<double>> temp_in, temp_out;
 		int t;
 		for(int j=0; j<mgs; j++){

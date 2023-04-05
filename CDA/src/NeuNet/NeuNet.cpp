@@ -85,8 +85,8 @@ neuron::neuron(int _id, int n_prev, int n_post, double _w, double _b, double (*_
 	for(int i=0; i<w.size(); i++){
 		cout<<" w"<<i<<": "<<w[i]<<flush;
 	}
-	cout << " act: " << act(-10) << " " <<act(-5) << " " << act(-1) << " " << act(0.5) << " " << act(0) << " " << act(0.5) << " " << act(1) << " " << act(5) << " " << act(10) <<flush;
-	cout << " dact: " << dact(-10) << " " << dact(-5) << " " << dact(-1) << " " << dact(0.5) << " " << dact(0) << " " << dact(0.5) << " " << dact(1) << " " << dact(5) << " " << dact(10) << flush;
+//	cout << " act: " << act(-10) << " " <<act(-5) << " " << act(-1) << " " << act(0.5) << " " << act(0) << " " << act(0.5) << " " << act(1) << " " << act(5) << " " << act(10) <<flush;
+//	cout << " dact: " << dact(-10) << " " << dact(-5) << " " << dact(-1) << " " << dact(0.5) << " " << dact(0) << " " << dact(0.5) << " " << dact(1) << " " << dact(5) << " " << dact(10) << flush;
 	cout << " lr: " << lr << endl;
 }
 

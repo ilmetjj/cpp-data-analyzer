@@ -5,3 +5,9 @@ set output 'difq.png'
 plot 'pred.dat' u 1:6 w p
 set output 'dep.png'
 plot 'pred.dat' u 4:5 w p
+set output 'di2.png'
+plot 'pred.dat' u 2:4 w p, 'pred.dat' u 2:5 w p
+set output 'di3.png'
+plot 'pred.dat' u 3:4 w p, 'pred.dat' u 3:5 w p
+set output 'sd23.png'
+plot 'pred.dat' u 2:3 w p

@@ -225,7 +225,7 @@ void neuron::set_prev(vector<neuron> &_prev){
 double neuron::read_val() { return a; }
 
 /*NET*/
-
+net::net(){}
 net::net(int n_input, int n_output, vector<int> n_hid, double w, double b, double (*_act)(double), double (*_dact)(double), double _lr, bool last_act)
 :n_in(n_input), n_out(n_output)
 {
@@ -252,7 +252,7 @@ net::net(int n_input, int n_output, vector<int> n_hid, double w, double b, doubl
 	for (int i = 0; i < n_out; i++)
 	{
 		if(last_act)
-			last.push_back(neuron(i, n_hid[n_hid.size()-2], 1, w, b, _act, _dact, _lr));
+			last.push_back(neuron(i, n_hid[n_hid.size() - 2], 1, w, b, _act, _dact, _lr));
 		else
 			last.push_back(neuron(i, n_hid[n_hid.size() - 2], 1, w, b, Dir, dDir, _lr));
 	}
@@ -378,3 +378,135 @@ double net::test(vector<vector<double>> _in, vector<vector<double>> exp_y)
 	}
 	return avg / _in.size();
 }
+
+//**********************************************************************************************************//
+
+bool neuron::save(fstream& fout){
+	fout.write(reinterpret_cast<char*>(&id), sizeof(id));
+	fout.write(reinterpret_cast<char*>(&npr), sizeof(npr));
+	fout.write(reinterpret_cast<char*>(&npst), sizeof(npst));
+	fout.write(reinterpret_cast<char*>(&b), sizeof(b));
+	int s = w.size();
+	fout.write(reinterpret_cast<char*>(&s), sizeof(s));
+	for (size_t i = 0; i < w.size(); i++){
+		fout.write(reinterpret_cast<char*>(&w[i]), sizeof(w[i]));
+	}
+	
+	return true;
+}
+bool neuron::load(fstream& fin){
+	fin.read(reinterpret_cast<char*>(&id), sizeof(id));
+	fin.read(reinterpret_cast<char*>(&npr), sizeof(npr));
+	fin.read(reinterpret_cast<char*>(&npst), sizeof(npst));
+	fin.read(reinterpret_cast<char*>(&b), sizeof(b));
+	int s;
+	fin.read(reinterpret_cast<char*>(&s), sizeof(s));
+	w.resize(s);
+	for (size_t i = 0; i < w.size(); i++) {
+		fin.read(reinterpret_cast<char*>(&w[i]), sizeof(w[i]));
+	}
+	return true;
+}
+
+bool net::save(string file) {
+	fstream fout;
+	fout.open(file, ios::binary | ios::out);
+//	fout.seekp(0, ios::beg);
+
+	fout.write(reinterpret_cast<char*>(&n_in), sizeof(n_in));
+	fout.write(reinterpret_cast<char*>(&n_out), sizeof(n_out));
+	int s=lay.size();
+	fout.write(reinterpret_cast<char*>(&s), sizeof(s));
+	for(int i=0; i<s; i++){
+		int t=lay[i].size();
+		fout.write(reinterpret_cast<char*>(&t), sizeof(t));
+		for (int j = 0; j < t; j++) {
+			lay[i][j].save(fout);
+		}
+	}
+
+	return true;
+}
+bool net::load(string file, double (*_act)(double), double (*_dact)(double), double _lr, bool last_act) {
+	fstream fin;
+	fin.open(file, ios::binary | ios::in);
+	
+	fin.read(reinterpret_cast<char*>(&n_in), sizeof(n_in));
+	fin.read(reinterpret_cast<char*>(&n_out), sizeof(n_out));
+	int s;
+	fin.read(reinterpret_cast<char*>(&s), sizeof(s));
+	lay.resize(s);
+	for (int i = 0; i < s; i++) {
+		int t;
+		fin.read(reinterpret_cast<char*>(&t), sizeof(t));
+		lay[i].resize(t);
+		for (int j = 0; j < t; j++) {
+			lay[i][j].load(fin);
+			if(last_act or i<s-1)
+			{
+				lay[i][j].act = _act;
+				lay[i][j].dact = _dact;
+			}
+			else
+			{
+				lay[i][j].act = Dir;
+				lay[i][j].dact = dDir;
+			}
+			lay[i][j].lr = _lr;
+		}
+	}
+
+	cout << "dafeaf" << endl;
+
+	for (int i = 0; i < lay.size() - 1; i++)
+	{
+		for (int j = 0; j < lay[i].size(); j++)
+		{
+			lay[i][j].post.resize(lay[i + 1].size());
+			lay[i][j].set_post(lay[i + 1]);
+		}
+	}
+
+	for (int i = 1; i < lay.size(); i++)
+	{
+		for (int j = 0; j < lay[i].size(); j++)
+		{
+			lay[i][j].prev.resize(lay[i - 1].size());
+			lay[i][j].set_prev(lay[i - 1]);
+		}
+	}
+
+	cout<<"dafeaf"<<endl;
+
+	return true;
+}
+//**********************************************************************************************************//
+/*
+	ifstream fin(file, ios::binary);
+
+	uint8_t header[80];
+	fin.seekg(0, ios::beg);
+	fin.read((char*)&header, sizeof(header));
+	cout << header << endl;
+	uint32_t N_tr;
+	fin.read((char*)&N_tr, sizeof(N_tr));
+	cout << N_tr << endl;
+	n_tr=N_tr;
+
+	double X=0,x=0,Y=0,y=0,Z=0,z=0;
+	for (size_t i = 0; i < N_tr; i++)
+	{
+		triangle t;
+		_Float32 N[3], A[3], B[3], C[3];
+		uint16_t end;
+		fin.read((char*)&N, sizeof(N));
+		fin.read((char*)&A, sizeof(A));
+		fin.read((char*)&B, sizeof(B));
+		fin.read((char*)&C, sizeof(C));
+		fin.read((char*)&end, sizeof(end));
+		t.n = vettore(N[0], N[1], N[2]);
+		t.a = vettore(A[0], A[1], A[2])*scale;
+		t.b = vettore(B[0], B[1], B[2])*scale;
+		t.c = vettore(C[0], C[1], C[2])*scale;
+
+*/

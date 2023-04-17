@@ -8,6 +8,7 @@
 #include <cstring>
 #include <string>
 #include <vector>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -38,6 +39,11 @@ private:
 	double (*act)(double);
 	double (*dact)(double);
 
+	friend class net;
+
+	bool save(fstream& file);
+	bool load(fstream& file);
+
 public:
 	neuron(int _id=0, int n_prev=0, int n_post=0, double w=0, double b=0, double (*_act)(double)=Softp, double (*_dact)(double)=dSoftp, double _lr=LR);
 
@@ -62,12 +68,16 @@ private:
 	void back_pr(vector<double> exp_y);
 	void appl_gr();
 public:
+	net();
 	net(int n_input, int n_output, vector<int> n_hid, double w=0, double b=0, double (*_act)(double)=Softp, double (*_dact)(double)=dSoftp, double _lr=LR, bool last_act=true);
 	
 	vector<double> calc(vector<double> in);
 
 	double train(vector<vector<double>> in, vector<vector<double>> exp_y);
 	double test(vector<vector<double>> in, vector<vector<double>> exp_y);
+
+	bool save(string file);
+	bool load(string file, double (*_act)(double), double (*_dact)(double), double _lr, bool last_act);
 };
 
 

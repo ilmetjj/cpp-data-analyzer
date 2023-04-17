@@ -38,10 +38,19 @@ int main(int argc, char** argv) {
 	cout << "lr=" << lr << endl;
 
 	vector<int> midlay;
-	midlay.push_back(2);
-	midlay.push_back(2);
-	net A(n_col-1, 1, midlay, 0, 0, Sigmoid, dSigmoid, lr, false);	
+	midlay.push_back(3);
+	
 
+	char to_load;
+	cout<<"load?[y/N]"<<endl; cin>>to_load;
+
+	net A;
+	string file_net = "net2.bin";
+	
+	if(to_load=='Y' || to_load=='y')
+	A.load(file_net, Sigmoid,dSigmoid, lr, false);
+	else
+	A=net(n_col-1, 1, midlay, 0, 0, Sigmoid, dSigmoid, lr, false);	
 	
 	cout << "\nnumber of iteration (es.:10e4):	"; cin >> n;
 	cout << "n=" << n << endl;
@@ -113,8 +122,17 @@ int main(int argc, char** argv) {
 	fout << "plot 'pred.dat' u 1:6 w p" << endl;
 	fout << "set output 'dep.png'" << endl;
 	fout << "plot 'pred.dat' u 4:5 w p" << endl;
+	fout << "set output 'di2.png'" << endl;
+	fout << "plot 'pred.dat' u 2:4 w p, 'pred.dat' u 2:5 w p" << endl;
+	fout << "set output 'di3.png'" << endl;
+	fout << "plot 'pred.dat' u 3:4 w p, 'pred.dat' u 3:5 w p" << endl;
+	fout << "set output 'sd23.png'" << endl;
+	fout << "plot 'pred.dat' u 2:3 w p" << endl;
 	fout.close();
 	system("gnuplot plt2 -p");
+
+	
+	A.save(file_net);
 
 	
 	return 0;

@@ -45,12 +45,12 @@ int main(int argc, char** argv) {
 	cout<<"load?[y/N]"<<endl; cin>>to_load;
 
 	net A;
-	string file_net = "net2.bin";
+	string file_net = "net3.bin";
 	
 	if(to_load=='Y' || to_load=='y')
-	A.load(file_net, Sigmoid,dSigmoid, lr, false);
+	A.load(file_net, Sigmoid,dSigmoid, lr, true);
 	else
-	A=net(n_col-1, 1, midlay, 0, 0, Sigmoid, dSigmoid, lr, false);	
+	A=net(n_col-1, 1, midlay, 0, 0, Sigmoid, dSigmoid, lr, true);	
 	
 	cout << "\nnumber of iteration (es.:10e4):	"; cin >> n;
 	cout << "n=" << n << endl;

@@ -128,6 +128,26 @@ int main(int argc, char** argv) {
 	fout << "plot 'pred.dat' u 3:4 w p, 'pred.dat' u 3:5 w p" << endl;
 	fout << "set output 'sd23.png'" << endl;
 	fout << "plot 'pred.dat' u 2:3 w p" << endl;
+	fout << "set output 's3D.png'" << endl;
+	fout << "splot 'pred.dat' u 2:3:4 w p, 'pred.dat' u 2:3:5 w p" << endl;
+	fout << "set terminal gif animate delay 1" << endl;
+	fout << "set output 'foobar1.gif'" << endl;
+	fout << "do for [i = 1:360] {" << endl;
+	fout << "	set view i/4, i, 1, 1"<<endl;
+	fout << "	splot 'pred.dat' u 2:3:4 w p, 'pred.dat' u 2:3:5 w p" << endl;
+	fout << "}" << endl;
+	fout << "set terminal gif animate delay 10" << endl;
+	fout << "set output 'foobar2.gif'" << endl;
+	fout << "do for [j = 1:360] {" << endl;
+	fout << "	set view 45, j, 1, 1" << endl;
+	fout << "	splot 'pred.dat' u 2:3:4 w p, 'pred.dat' u 2:3:5 w p" << endl;
+	fout << "}" << endl;
+	fout << "set terminal gif animate delay 10" << endl;
+	fout << "set output 'foobar3.gif'" << endl;
+	fout << "do for [h = 1:360] {" << endl;
+	fout << "	set view 90, h, 1, 1" << endl;
+	fout << "	splot 'pred.dat' u 2:3:4 w p, 'pred.dat' u 2:3:5 w p" << endl;
+	fout << "}" << endl;
 	fout.close();
 	system("gnuplot plt2 -p");
 

@@ -11,3 +11,23 @@ set output 'di3.png'
 plot 'pred.dat' u 3:4 w p, 'pred.dat' u 3:5 w p
 set output 'sd23.png'
 plot 'pred.dat' u 2:3 w p
+set output 's3D.png'
+splot 'pred.dat' u 2:3:4 w p, 'pred.dat' u 2:3:5 w p
+set terminal gif animate delay 1
+set output 'foobar1.gif'
+do for [i = 1:360] {
+	set view i/4, i, 1, 1
+	splot 'pred.dat' u 2:3:4 w p, 'pred.dat' u 2:3:5 w p
+}
+set terminal gif animate delay 10
+set output 'foobar2.gif'
+do for [j = 1:360] {
+	set view 45, j, 1, 1
+	splot 'pred.dat' u 2:3:4 w p, 'pred.dat' u 2:3:5 w p
+}
+set terminal gif animate delay 10
+set output 'foobar3.gif'
+do for [h = 1:360] {
+	set view 90, h, 1, 1
+	splot 'pred.dat' u 2:3:4 w p, 'pred.dat' u 2:3:5 w p
+}

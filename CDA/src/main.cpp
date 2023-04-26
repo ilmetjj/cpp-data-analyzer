@@ -38,14 +38,14 @@ int main(int argc, char** argv) {
 	cout << "lr=" << lr << endl;
 
 	vector<int> midlay;
-	midlay.push_back(3);
+	midlay.push_back(8);
 	
 
 	char to_load;
 	cout<<"load?[y/N]"<<endl; cin>>to_load;
 
 	net A;
-	string file_net = "net3.bin";
+	string file_net = "net4.bin";
 	
 	if(to_load=='Y' || to_load=='y')
 	A.load(file_net, Sigmoid,dSigmoid, lr, true);
